@@ -36,8 +36,9 @@
   - Food : une commande. Après la préparation par le reviewer, le runner joue aussi le coursier.
   Bloquée : `AvailabilityTracker` existe, mais aucun poller ni service ne détecte la transition de disponibilité ou ne crée la demande métier.
 
-- [ ] **4. Arrêts et attente**
+- [~] **4. Arrêts et attente**
   Sur annulation, refus ou fin, le runner arrête ses actions. Quand l'étape appartient au reviewer, il attend sans la faire à sa place.
+  Bloquée : l'attente du PIN Go est testée, mais le service réactif ne marque pas les annulations/refus/états terminaux et Send/Food ne sont pas raccordés.
 
 - [ ] **5. Reprise**
   Après un redémarrage, reprendre la mission en cours à l'étape enregistrée, sans recréer de demande.
