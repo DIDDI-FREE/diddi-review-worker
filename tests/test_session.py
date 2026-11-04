@@ -4,7 +4,7 @@ from app.orchestration.reactive import (
     ReactiveCoordinator,
     TriggerKind,
 )
-from app.orchestration.session import ReactiveSession, SessionState, SessionStatus
+from app.orchestration.session import JsonSessionStore, ReactiveSession, SessionState, SessionStatus
 
 
 def make_session():
@@ -41,3 +41,13 @@ def test_terminal_session_stops_until_explicit_rearm():
     assert session.observe(trigger("v2")) is False
     session.rearm()
     assert session.observe(trigger("v2")) is True
+
+
+def test_tache5_persists_and_restores_progress(tmp_path):
+    store = JsonSessionStore(tmp_path / "session.json")
+    state = SessionState("s1", SessionStatus.WAITING_REVIEWER, "diddigo:passenger:reviewer:v1", ["ride-1"], "reviewer_must_start", ["accept"])
+    store.save(state)
+    restored = store.load()
+    assert restored is not None
+    assert restored.current_step == "reviewer_must_start"
+    assert restored.resource_ids == ["ride-1"]

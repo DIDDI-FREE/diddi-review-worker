@@ -40,9 +40,9 @@
   Sur annulation, refus ou fin, le runner arrête ses actions. Quand l'étape appartient au reviewer, il attend sans la faire à sa place.
   Vérifié par `tests/test_terminal_guards.py` (`pytest -k tache4`) et les trois workflows : états terminaux arrêtés, données reviewer manquantes attendues.
 
-- [ ] **5. Reprise**
+- [x] **5. Reprise**
   Après un redémarrage, reprendre la mission en cours à l'étape enregistrée, sans recréer de demande.
-  Bloquée : le ledger déduplique les déclencheurs, mais la progression métier n'est pas persistée ni reprise par le service réactif.
+  Vérifié par `tests/test_session.py::test_tache5_persists_and_restores_progress` (`pytest -k tache5`) : étape, ressources et actions sont restaurées après redémarrage.
 
 - [ ] **6. Tests**
   Tests locaux avec API simulées pour : compte non Review ignoré, une seule demande après passage en ligne, reprise après redémarrage et après réponse perdue, attente du reviewer, arrêt sur annulation et sur fin.

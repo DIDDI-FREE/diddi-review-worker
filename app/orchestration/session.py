@@ -1,7 +1,9 @@
 """Safety state machine for one reactive Review session."""
 
+import json
 from dataclasses import dataclass, field
 from enum import StrEnum
+from pathlib import Path
 
 from app.orchestration.reactive import ObservedTrigger, ReactiveCoordinator
 
@@ -21,6 +23,26 @@ class SessionState:
     resource_ids: list[str] = field(default_factory=list)
     current_step: str = "waiting_for_trigger"
     engaged_actions: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return {"session_id": self.session_id, "status": self.status.value, "trigger_key": self.trigger_key, "resource_ids": self.resource_ids, "current_step": self.current_step, "engaged_actions": self.engaged_actions}
+
+    @classmethod
+    def from_dict(cls, value: dict) -> "SessionState":
+        return cls(value["session_id"], SessionStatus(value["status"]), value.get("trigger_key"), list(value.get("resource_ids", [])), value.get("current_step", "waiting_for_trigger"), list(value.get("engaged_actions", [])))
+
+
+class JsonSessionStore:
+    def __init__(self, path: str | Path) -> None:
+        self.path = Path(path)
+
+    def save(self, state: SessionState) -> None:
+        self.path.write_text(json.dumps(state.to_dict()), encoding="utf-8")
+
+    def load(self) -> SessionState | None:
+        if not self.path.exists():
+            return None
+        return SessionState.from_dict(json.loads(self.path.read_text(encoding="utf-8")))
 
 
 class ReactiveSession:
