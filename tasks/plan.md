@@ -94,7 +94,8 @@ $env:PYTHONPATH='.'; pytest -q
 - [x] Actions Go/Send/Food : endpoints normaux et payloads PIN/GPS/preuves testés avec API simulées.
 - [x] Send consommateur : lecture de la livraison créée via `GET /v1/deliveries/{delivery_id}` testée.
 - [x] Food client : lecture de la commande créée via `GET /food/v1/orders/{order_id}` testée.
-- [ ] Bootstrap réel : brancher configuration, clients, pollers et JWT dans le démarrage du worker.
+- [x] Bootstrap bindings/clients lecture seule : `build_runtime` ajouté et testé.
+- [ ] Démarrage worker et résolution JWT : à intégrer.
 - [ ] Workflows métier complets : enchaîner les actions et attendre les statuts serveur.
 - [ ] Pay et exploitation : vérifier le mode test, retries, métriques et documentation opérationnelle.
 
