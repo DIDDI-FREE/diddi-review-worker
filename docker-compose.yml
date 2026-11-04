@@ -1,7 +1,11 @@
 services:
   runner:
     build: .
-    ports: ["8000:8000"]
+    # Let Docker map container 8000 to a random free host port (several fixed
+    # host ports are already taken). The reactive loop is outbound and needs no
+    # published port; this is only for reaching the API/health. Find the assigned
+    # port in Portainer, or attach the runner to your reverse-proxy network later.
+    ports: ["8000"]
     environment:
       APP_ENV: staging
       SERVICE_NAME: diddi-review-runner
