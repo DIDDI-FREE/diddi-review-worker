@@ -1,7 +1,13 @@
 FROM python:3.12-slim
 WORKDIR /app
 COPY pyproject.toml .
-RUN pip install --no-cache-dir fastapi httpx pydantic-settings 'PyJWT[crypto]' 'uvicorn[standard]' redis
+RUN pip install --no-cache-dir \
+    fastapi httpx pydantic-settings 'PyJWT[crypto]' 'uvicorn[standard]' redis \
+    'SQLAlchemy[asyncio]' asyncpg alembic
 COPY app ./app
+COPY migrations ./migrations
+COPY alembic.ini ./alembic.ini
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 EXPOSE 8000
-CMD ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["./docker-entrypoint.sh"]

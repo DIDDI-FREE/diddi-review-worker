@@ -11,7 +11,7 @@ def settings() -> Settings:
         review_accounts_json='[{"reviewer_user_id":"u1","tested_role":"passenger","counter_role":"driver","counter_user_id":"u2","product":"diddigo","email":"u1@example.com","otp":"123456"}]',
         diddigo_base_url="https://go.test",
         diddisend_base_url="https://send.test",
-        diddifoood_base_url="https://food.test",
+        diddifood_base_url="https://food.test",
     )
 
 

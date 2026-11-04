@@ -54,6 +54,6 @@ def build_runtime(settings: Settings, client: httpx.AsyncClient) -> ReviewRuntim
         registry=registry,
         go=GoPoller(ReadOnlyHttpClient(settings.diddigo_base_url, client)),
         send=SendPoller(ReadOnlyHttpClient(settings.diddisend_base_url, client)),
-        food=FoodPoller(ReadOnlyHttpClient(settings.diddifoood_base_url, client)),
+        food=FoodPoller(ReadOnlyHttpClient(settings.diddifood_base_url, client)),
         tokens=ReviewTokenCache(issue),
     )
