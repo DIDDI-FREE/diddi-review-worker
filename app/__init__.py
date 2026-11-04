@@ -1,2 +1,0 @@
-"""Diddi review runner."""
-
