@@ -1,7 +1,7 @@
 """Idempotency ledger boundary for observed review triggers."""
 
-from collections.abc import Protocol
 from threading import Lock
+from typing import Protocol
 
 
 class EventLedger(Protocol):
