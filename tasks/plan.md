@@ -114,3 +114,4 @@ Chaque tâche cochée a été vérifiée par `ruff` et les tests locaux ; aucune
 
 - [x] Résolution JWT runtime : credentials configurées, OTP normal et cache court testés (`46 tests`).
 - [x] Dépendances production runner : factories Redis Streams et PostgreSQL propres au runner testées sans connexion externe.
+- [x] Démarrage Go déployé : lifespan FastAPI lance la boucle réactive quand `REACTIVE_ENABLED=true`, et Compose exige `REVIEW_ACCOUNTS_JSON`.

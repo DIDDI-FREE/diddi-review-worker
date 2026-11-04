@@ -17,6 +17,9 @@ services:
       DATABASE_URL: postgresql+asyncpg://runner:runner@postgres:5432/review_runner
       JWT_ALGORITHMS: RS256
       HTTP_TIMEOUT_SECONDS: 15
+      REACTIVE_ENABLED: "true"
+      REACTIVE_POLL_INTERVAL_SECONDS: 3
+      REVIEW_ACCOUNTS_JSON: ${REVIEW_ACCOUNTS_JSON:?Set REVIEW_ACCOUNTS_JSON in Portainer}
     depends_on: [redis, postgres]
   postgres:
     image: postgres:16-alpine
