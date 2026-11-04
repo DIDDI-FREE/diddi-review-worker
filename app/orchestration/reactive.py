@@ -71,3 +71,15 @@ class ReactiveCoordinator:
     def event_key(trigger: ObservedTrigger) -> str:
         version = trigger.state_version or trigger.resource_id or trigger.event_id
         return f"{trigger.product}:{trigger.role}:{trigger.user_id}:{version}"
+
+
+class AvailabilityTracker:
+    """Detects false->true transitions, not a professional already online."""
+
+    def __init__(self) -> None:
+        self._previous: dict[str, bool] = {}
+
+    def transition_to_available(self, user_id: str, available: bool) -> bool:
+        previous = self._previous.get(user_id, False)
+        self._previous[user_id] = available
+        return available and not previous

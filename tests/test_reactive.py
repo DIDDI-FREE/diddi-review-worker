@@ -1,5 +1,6 @@
 from app.orchestration.reactive import (
     AccountBinding,
+    AvailabilityTracker,
     ObservedTrigger,
     ReactiveCoordinator,
     TriggerKind,
@@ -35,3 +36,11 @@ def test_terminal_trigger_stops_future_action() -> None:
     trigger = ObservedTrigger("e1", TriggerKind.CONSUMER_RESOURCE_CREATED, "diddigo", "passenger", "reviewer", "r1", "v1")
     c.mark_terminal(trigger)
     assert c.react(trigger) is None
+
+
+def test_availability_requires_real_false_to_true_transition():
+    tracker = AvailabilityTracker()
+    assert tracker.transition_to_available("driver", True) is True
+    assert tracker.transition_to_available("driver", True) is False
+    assert tracker.transition_to_available("driver", False) is False
+    assert tracker.transition_to_available("driver", True) is True
