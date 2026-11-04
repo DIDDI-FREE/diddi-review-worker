@@ -8,7 +8,6 @@ class Settings(BaseSettings):
 
     app_env: str = "development"
     service_name: str = "diddi-review-runner"
-    runner_service_token: str = "change-me"
     diddifreeid_base_url: str = "http://diddi-free-id:8000"
     diddigo_base_url: str = "http://diddi-go:8000"
     diddisend_base_url: str = "http://diddi-send:8000"

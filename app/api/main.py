@@ -3,7 +3,7 @@ import logging
 from contextlib import asynccontextmanager
 
 import httpx
-from fastapi import Depends, FastAPI, Header, HTTPException, status
+from fastapi import FastAPI, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.adapters.diddigo import DiddiGoAdapter
@@ -58,14 +58,6 @@ repository = InMemoryRunRepository()
 orchestrator = Orchestrator(repository)
 
 
-def require_service_auth(
-    authorization: str | None = Header(default=None),
-    settings: Settings = Depends(get_settings),  # noqa: B008
-) -> None:
-    if authorization != f"Bearer {settings.runner_service_token}":
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="invalid service credentials")
-
-
 @app.get("/health/live")
 async def live() -> dict[str, str]:
     return {"status": "ok"}
@@ -76,7 +68,7 @@ async def ready() -> dict[str, str]:
     return {"status": "ready"}
 
 
-@app.post("/v1/runs", status_code=202, dependencies=[Depends(require_service_auth)])
+@app.post("/v1/runs", status_code=202)
 async def create_run(request: RunRequest) -> dict:
     try:
         return (await orchestrator.create(request)).__dict__
@@ -84,7 +76,7 @@ async def create_run(request: RunRequest) -> dict:
         raise HTTPException(422, str(exc)) from exc
 
 
-@app.get("/v1/runs/{run_id}", dependencies=[Depends(require_service_auth)])
+@app.get("/v1/runs/{run_id}")
 async def get_run(run_id: str) -> dict:
     record = repository.get(run_id)
     if record is None:
@@ -92,7 +84,7 @@ async def get_run(run_id: str) -> dict:
     return record.__dict__
 
 
-@app.post("/v1/runs/{run_id}/cancel", dependencies=[Depends(require_service_auth)])
+@app.post("/v1/runs/{run_id}/cancel")
 async def cancel_run(run_id: str) -> dict:
     try:
         return orchestrator.cancel(run_id).__dict__
@@ -102,7 +94,7 @@ async def cancel_run(run_id: str) -> dict:
         raise HTTPException(409, str(exc)) from exc
 
 
-@app.post("/v1/runs/{run_id}/retry", dependencies=[Depends(require_service_auth)])
+@app.post("/v1/runs/{run_id}/retry")
 async def retry_run(run_id: str) -> dict:
     try:
         return orchestrator.retry(run_id).__dict__

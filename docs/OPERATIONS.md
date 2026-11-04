@@ -16,8 +16,8 @@ $env:PYTHONPATH='.'; pytest -q
 
 ## Configuration
 
-Dans Portainer, fournir `RUNNER_SERVICE_TOKEN` et `REVIEW_ACCOUNTS_JSON` comme
-variables secrètes. Chaque compte doit être explicitement associé à un rôle et
+Dans Portainer, fournir `REVIEW_ACCOUNTS_JSON` comme variable secrète. Chaque
+compte doit être explicitement associé à un rôle et
 à un contre-rôle. Les OTP ne doivent jamais apparaître dans les logs.
 
 Le runner utilise Redis Streams pour la file et PostgreSQL pour l’état propre du

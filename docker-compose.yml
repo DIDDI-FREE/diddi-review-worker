@@ -5,7 +5,6 @@ services:
     environment:
       APP_ENV: staging
       SERVICE_NAME: diddi-review-runner
-      RUNNER_SERVICE_TOKEN: ${RUNNER_SERVICE_TOKEN:?Set RUNNER_SERVICE_TOKEN in Portainer}
       DIDDIFREEID_BASE_URL: https://auth-staging.diddifree.com
       DIDDIGO_BASE_URL: https://go-staging.diddifree.com
       DIDDISEND_BASE_URL: https://diddisend-api-staging.diddifree.com
