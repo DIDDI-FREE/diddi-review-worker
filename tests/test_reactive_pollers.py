@@ -1,6 +1,11 @@
 import pytest
 
-from app.orchestration.reactive import AccountBinding, ObservedTrigger, ReactiveCoordinator, TriggerKind
+from app.orchestration.reactive import (
+    AccountBinding,
+    ObservedTrigger,
+    ReactiveCoordinator,
+    TriggerKind,
+)
 from app.orchestration.reactive_worker import ReactivePollingWorker
 from app.persistence.event_ledger import InMemoryEventLedger
 
