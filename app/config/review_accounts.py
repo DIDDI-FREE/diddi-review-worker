@@ -12,6 +12,18 @@ class ReviewAccountConfig(BaseModel):
     counter_user_id: str
     product: str
     enabled: bool = True
+    email: str | None = None
+    phone: str | None = None
+    otp: str | None = None
+
+    def credential(self):
+        from app.auth.token_provider import ReviewAccountCredential
+
+        if not self.email and not self.phone:
+            raise ValueError(f"review account {self.reviewer_user_id} has no email or phone")
+        if not self.otp:
+            raise ValueError(f"review account {self.reviewer_user_id} has no OTP secret")
+        return ReviewAccountCredential(self.reviewer_user_id, self.phone, self.otp, email=self.email)
 
     def binding(self) -> AccountBinding:
         return AccountBinding(

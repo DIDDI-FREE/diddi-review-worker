@@ -7,7 +7,7 @@ from app.config.settings import Settings
 
 def settings() -> Settings:
     return Settings(
-        review_accounts_json='[{"reviewer_user_id":"u1","tested_role":"passenger","counter_role":"driver","counter_user_id":"u2","product":"diddigo"}]',
+        review_accounts_json='[{"reviewer_user_id":"u1","tested_role":"passenger","counter_role":"driver","counter_user_id":"u2","product":"diddigo","email":"u1@example.com","otp":"123456"}]',
         diddigo_base_url="https://go.test",
         diddisend_base_url="https://send.test",
         diddifoood_base_url="https://food.test",
@@ -21,6 +21,18 @@ def test_bootstrap_builds_all_read_only_pollers():
     assert runtime.go.client.base_url == "https://go.test"
     assert runtime.send.client.base_url == "https://send.test"
     assert runtime.food.client.base_url == "https://food.test"
+
+
+@pytest.mark.asyncio
+async def test_bootstrap_resolves_only_explicit_account(monkeypatch):
+    settings_value = settings()
+    runtime = build_runtime(settings_value, httpx.AsyncClient())
+    async def issue(_, __):
+        return "jwt"
+    monkeypatch.setattr("app.auth.token_provider.DiddiFreeIDTokenProvider.issue_access_token", issue)
+    assert await runtime.tokens.get("u1") == "jwt"
+    with pytest.raises(ValueError, match="account is not explicitly configured"):
+        await runtime.tokens.get("unknown")
 
 
 def test_bootstrap_rejects_empty_registry():
