@@ -40,8 +40,9 @@
   Sur annulation, refus ou fin, le runner arrête ses actions. Quand l'étape appartient au reviewer, il attend sans la faire à sa place.
   Bloquée : l'attente du PIN Go est testée, mais le service réactif ne marque pas les annulations/refus/états terminaux et Send/Food ne sont pas raccordés.
 
-- [ ] **5. Reprise**
+- [~] **5. Reprise**
   Après un redémarrage, reprendre la mission en cours à l'étape enregistrée, sans recréer de demande.
+  Bloquée : le ledger déduplique les déclencheurs, mais la progression métier n'est pas persistée ni reprise par le service réactif.
 
 - [ ] **6. Tests**
   Tests locaux avec API simulées pour : compte non Review ignoré, une seule demande après passage en ligne, reprise après redémarrage et après réponse perdue, attente du reviewer, arrêt sur annulation et sur fin.
