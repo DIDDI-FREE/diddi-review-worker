@@ -105,3 +105,6 @@ $env:PYTHONPATH='.'; pytest -q
 - [ ] Pay et exploitation : vérifier le mode test, retries, métriques et documentation opérationnelle.
 
 Chaque tâche cochée a été vérifiée par `ruff` et les tests locaux ; aucune mission staging n’a été lancée.
+## Dernière vérification
+
+- [x] Résolution JWT runtime : credentials configurées, OTP normal et cache court testés (`46 tests`).
