@@ -16,6 +16,7 @@ from app.orchestration import Orchestrator
 from app.persistence import InMemoryRunRepository
 from app.runtime import build_production_dependencies
 from app.scenarios import RunRequest
+from app.services.food_professional import FoodProfessionalService
 from app.services.food_review import FoodReviewService
 from app.services.go_review import GoReviewService
 from app.services.send_professional import SendProfessionalService
@@ -57,6 +58,14 @@ async def _reactive_loop(settings: Settings, stop: asyncio.Event) -> None:
             settings=settings,
             ledger=production.events,
         )
+        food_professional = FoodProfessionalService(
+            registry=runtime.registry,
+            tokens=runtime.tokens,
+            poller=runtime.food,
+            adapter=DiddiFoodAdapter("diddifood", settings.diddifood_base_url, client),
+            settings=settings,
+            ledger=production.events,
+        )
         while not stop.is_set():
             try:
                 await go_service.run_once()
@@ -74,6 +83,10 @@ async def _reactive_loop(settings: Settings, stop: asyncio.Event) -> None:
                 await send_professional.run_once()
             except (httpx.HTTPError, ValueError, RuntimeError) as exc:
                 logger.warning("reactive Send professional poll failed; will retry", exc_info=exc)
+            try:
+                await food_professional.run_once()
+            except (httpx.HTTPError, ValueError, RuntimeError) as exc:
+                logger.warning("reactive Food professional poll failed; will retry", exc_info=exc)
             try:
                 await asyncio.wait_for(stop.wait(), timeout=settings.reactive_poll_interval_seconds)
             except TimeoutError:

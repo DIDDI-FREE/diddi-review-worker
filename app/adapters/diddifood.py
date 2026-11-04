@@ -5,6 +5,22 @@ class DiddiFoodAdapter(HttpAdapter):
     async def get_order(self, order_id: str, *, token: str) -> dict:
         return await self.get(f"food/v1/orders/{order_id}", token=token)
 
+    async def get_menu(self, restaurant_id: str, *, token: str) -> dict:
+        return await self.get(f"food/v1/restaurants/{restaurant_id}/menu", token=token)
+
+    async def place_order(self, restaurant_id: str, *, token: str, items: list[dict], dropoff: dict, key: str) -> AdapterResponse:
+        payload = {
+            "items": items,
+            "payment_method": "cash_on_delivery",
+            "pickup_mode": "delivery",
+            "dropoff_address": dropoff.get("address", ""),
+            "dropoff_latitude": dropoff.get("lat"),
+            "dropoff_longitude": dropoff.get("lng"),
+            "recipient_name": "Review Customer",
+            "recipient_phone": "+2250700000000",
+        }
+        return await self.post(f"food/v1/restaurants/{restaurant_id}/orders", token=token, payload=payload, idempotency_key=key)
+
     async def accept_order(self, restaurant_id: str, order_id: str, *, token: str, prep_minutes: int, key: str) -> AdapterResponse:
         return await self.post(f"food/v1/restaurants/{restaurant_id}/orders/{order_id}/accept", token=token, payload={"prep_minutes": prep_minutes}, idempotency_key=key)
 

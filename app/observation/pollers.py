@@ -66,3 +66,13 @@ class FoodPoller:
     async def customer_orders(self, context: PollContext) -> list[ObservedTrigger]:
         payload = await self.client.get("food/v1/orders", token=context.token)
         return [ObservedTrigger(str(o.get("id")), TriggerKind.CONSUMER_RESOURCE_CREATED, "diddifood", "customer", context.user_id, str(o["id"]), str(o.get("updated_at", o.get("status")))) for o in _items(payload) if o.get("id")]
+
+    async def my_restaurant(self, context: PollContext) -> tuple[str | None, bool]:
+        payload = await self.client.get("food/v1/me/restaurants", token=context.token)
+        items = _items(payload)
+        if not items:
+            return None, False
+        restaurant = items[0].get("restaurant", items[0])
+        rid = restaurant.get("id")
+        active = str(restaurant.get("status", "")).lower() == "active"
+        return (str(rid) if rid else None), active
