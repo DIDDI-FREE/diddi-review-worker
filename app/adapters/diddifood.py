@@ -2,6 +2,9 @@ from app.adapters.base import AdapterResponse, HttpAdapter
 
 
 class DiddiFoodAdapter(HttpAdapter):
+    async def get_order(self, order_id: str, *, token: str) -> dict:
+        return await self.get(f"food/v1/orders/{order_id}", token=token)
+
     async def accept_order(self, restaurant_id: str, order_id: str, *, token: str, prep_minutes: int, key: str) -> AdapterResponse:
         return await self.post(f"food/v1/restaurants/{restaurant_id}/orders/{order_id}/accept", token=token, payload={"prep_minutes": prep_minutes}, idempotency_key=key)
 

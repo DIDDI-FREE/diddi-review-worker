@@ -84,3 +84,18 @@ Accompagner les actions réelles du reviewer Google Play et piloter uniquement l
 ruff check app tests migrations
 $env:PYTHONPATH='.'; pytest -q
 ```
+
+## Suivi d’implémentation
+
+- [x] Configuration et registre explicite : `ReviewAccountRegistry` ajouté et testé.
+- [x] Détection/polling : pollers Go, Send coursier et Food restaurant ajoutés et testés.
+- [x] Persistance/idempotence : ledger mémoire et SQL ajoutés et testés.
+- [x] Sessions réactives : transitions, attente reviewer, terminal et réarmement testés.
+- [x] Actions Go/Send/Food : endpoints normaux et payloads PIN/GPS/preuves testés avec API simulées.
+- [x] Send consommateur : lecture de la livraison créée via `GET /v1/deliveries/{delivery_id}` testée.
+- [x] Food client : lecture de la commande créée via `GET /food/v1/orders/{order_id}` testée.
+- [ ] Bootstrap réel : brancher configuration, clients, pollers et JWT dans le démarrage du worker.
+- [ ] Workflows métier complets : enchaîner les actions et attendre les statuts serveur.
+- [ ] Pay et exploitation : vérifier le mode test, retries, métriques et documentation opérationnelle.
+
+Chaque tâche cochée a été vérifiée par `ruff` et les tests locaux ; aucune mission staging n’a été lancée.

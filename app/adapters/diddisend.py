@@ -2,6 +2,9 @@ from app.adapters.base import AdapterResponse, HttpAdapter
 
 
 class DiddiSendAdapter(HttpAdapter):
+    async def get_delivery(self, delivery_id: str, *, token: str) -> dict:
+        return await self.get(f"v1/deliveries/{delivery_id}", token=token)
+
     async def accept(self, delivery_id: str, *, token: str, key: str) -> AdapterResponse:
         return await self.post(f"v1/deliveries/{delivery_id}/accept", token=token, payload={}, idempotency_key=key)
 
