@@ -2,9 +2,21 @@ services:
   runner:
     build: .
     ports: ["8000:8000"]
-    env_file: [.env]
     environment:
-      RUNNER_SERVICE_TOKEN: ${RUNNER_SERVICE_TOKEN:-change-me}
+      APP_ENV: staging
+      SERVICE_NAME: diddi-review-runner
+      RUNNER_SERVICE_TOKEN: ${RUNNER_SERVICE_TOKEN:?Set RUNNER_SERVICE_TOKEN in Portainer}
+      DIDDIFREEID_BASE_URL: https://auth-staging.diddifree.com
+      DIDDIGO_BASE_URL: https://go-staging.diddifree.com
+      DIDDISEND_BASE_URL: https://diddisend-api-staging.diddifree.com
+      DIDDIFOOD_BASE_URL: https://diddifood-backend-staging.diddifree.com
+      DIDDIFREEID_ISSUER: https://auth-staging.diddifree.com
+      DIDDIFREEID_AUDIENCE: diddi-services
+      DIDDIFREEID_JWKS_URL: https://auth-staging.diddifree.com/.well-known/jwks.json
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql+asyncpg://runner:runner@postgres:5432/review_runner
+      JWT_ALGORITHMS: RS256
+      HTTP_TIMEOUT_SECONDS: 15
     depends_on: [redis, postgres]
   postgres:
     image: postgres:16-alpine

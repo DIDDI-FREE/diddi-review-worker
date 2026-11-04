@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     diddifreeid_base_url: str = "http://diddi-free-id:8000"
     diddigo_base_url: str = "http://diddi-go:8000"
     diddisend_base_url: str = "http://diddi-send:8000"
-    diddifoood_base_url: str = "http://diddi-food:8000"
+    diddifoood_base_url: str = "https://diddifood-backend-staging.diddifree.com"
     redis_url: str = "redis://redis:6379/0"
     stream_name: str = "diddi-review-runs"
     database_url: str = "postgresql+asyncpg://runner:runner@postgres:5432/review_runner"
