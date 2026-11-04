@@ -45,3 +45,24 @@ alembic upgrade head
 Ces éléments dépendent d’environnements et de contrats externes absents de ce dépôt ; ils
 ne peuvent pas être simulés honnêtement comme une intégration terminée.
 # diddi-review-worker
+
+## Mode réactif
+
+Le runner ne crée pas de scénario de sa propre initiative et ne pilote jamais le
+compte reviewer. Il attend un événement métier fiable, vérifie l'association
+explicite reviewer/contre-rôle, déduplique l'événement, puis prépare une seule
+réaction. Les événements répétés, les comptes non associés et les opérations
+utilisateur ordinaires sont ignorés.
+
+Le noyau de décision est dans `app/orchestration/reactive.py`. Les détecteurs
+produit et les appels de progression restent à brancher sur les contrats réels
+de Go, Send et Food. Aucun endpoint de détection fiable n'a été inventé.
+
+## Limites connues
+
+- La persistance de production et le verrouillage multi-instance doivent encore
+  être branchés au repository SQL/Redis.
+- Les contrats d'observation et de progression (disponibilité, matching, PIN,
+  livraison et commande) doivent être confirmés dans les services métier.
+- DiddiFood restaurant et DiddiPay restent bloqués tant que leurs contrats
+  correspondants ne sont pas confirmés.
