@@ -50,7 +50,7 @@ class ReactiveCoordinator:
         self._terminal: set[str] = set()
 
     def react(self, trigger: ObservedTrigger) -> Reaction | None:
-        key = self._key(trigger)
+        key = self.event_key(trigger)
         if key in self._handled or key in self._terminal:
             return None
         binding = self._bindings.get((trigger.product, trigger.role, trigger.user_id))
@@ -62,12 +62,12 @@ class ReactiveCoordinator:
         return Reaction("play_counter_role", binding, trigger.resource_id)
 
     def mark_terminal(self, trigger: ObservedTrigger) -> None:
-        self._terminal.add(self._key(trigger))
+        self._terminal.add(self.event_key(trigger))
 
     def rearm(self, trigger: ObservedTrigger) -> None:
-        self._handled.discard(self._key(trigger))
+        self._handled.discard(self.event_key(trigger))
 
     @staticmethod
-    def _key(trigger: ObservedTrigger) -> str:
+    def event_key(trigger: ObservedTrigger) -> str:
         version = trigger.state_version or trigger.resource_id or trigger.event_id
         return f"{trigger.product}:{trigger.role}:{trigger.user_id}:{version}"
