@@ -20,13 +20,14 @@
   Configurer le compte client Review et le compte métier Review avec ses profils chauffeur, coursier et restaurant. Le runner vérifie `is_review_account` et ignore tout autre compte.
   Vérifié par `tests/test_bootstrap.py` : seuls les comptes configurés sont résolus et les tokens sans `is_review_account=true` sont rejetés.
 
-- [ ] **2. Reviewer client**
+- [~] **2. Reviewer client**
   Quand il crée une course, une livraison ou une commande, le runner joue le contre-rôle jusqu'à la remise :
   - Go : chauffeur proche du point de départ, qui accepte, arrive, démarre et termine.
   - Send : coursier qui accepte, collecte et remet.
   - Food : restaurant qui accepte et prépare, puis coursier qui collecte et livre.
 
   Respecter le GPS, le PIN et les preuves. Le paiement et l'avis restent au reviewer.
+  Bloquée : seul le service réactif DiddiGo passager est raccordé ; les workflows Send/Food existent mais aucun service ne les déclenche sur les ressources du reviewer.
 
 - [ ] **3. Reviewer métier**
   Quand il **passe** en ligne (vrai changement d'état, pas un état trouvé au démarrage), le runner joue le client et crée **une seule** demande compatible près de lui :
