@@ -1,6 +1,3 @@
-from app.e2e import GooglePlayDriver
-
-
 def test_google_play_driver_contract_is_runtime_checkable_by_shape():
     class Driver:
         async def open_app(self): ...
