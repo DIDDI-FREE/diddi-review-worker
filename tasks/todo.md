@@ -27,3 +27,7 @@
   - Acceptance: Only public, normal business transitions are used; unsupported flows block explicitly.
   - Verify: Adapter contract tests; no shared staging execution.
   - Files: `app/adapters/`, `app/orchestration/`
+- [x] Task: Add bounded retries and financial safety gate
+  - Acceptance: Unconfirmed Pay mode blocks; retries have a fixed limit; terminal errors do not retry.
+  - Verify: `pytest -q tests/test_pay_retry.py`
+  - Files: `app/adapters/pay_gate.py`, `app/orchestration/retry.py`, `tests/test_pay_retry.py`

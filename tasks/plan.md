@@ -102,6 +102,8 @@ $env:PYTHONPATH='.'; pytest -q
 - [x] Workflow Food restaurant : acceptation `prep_minutes` et préparation testées.
 - [x] Contrat driver Google Play : `app.e2e.GooglePlayDriver` et documentation existants, test de forme ajouté.
 - [~] Notation restaurant Food : aucune route/mutation trouvée dans `app/`, `docs/` ou les OpenAPI inspectés ; il faut fournir un contrat API ou retirer ce rôle.
+- [x] Fiabilité : retries bornés et erreurs métier terminales testés.
+- [~] DiddiPay : le code ne contient pas d’endpoint de confirmation non destructif du mode test ; la configuration doit fournir ce signal avant toute opération financière.
 - [ ] Démarrage worker et résolution JWT dans le runtime : à intégrer.
 - [ ] Workflows métier complets : enchaîner les actions et attendre les statuts serveur.
 - [ ] Pay et exploitation : vérifier le mode test, retries, métriques et documentation opérationnelle.
