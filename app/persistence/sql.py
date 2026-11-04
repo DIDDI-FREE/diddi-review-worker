@@ -32,6 +32,13 @@ class ReviewStepRow(Base):
     run: Mapped[ReviewRunRow] = relationship(back_populates="steps")
 
 
+class ReviewEventLedgerRow(Base):
+    __tablename__ = "review_event_ledger"
+    event_key: Mapped[str] = mapped_column(String(255), primary_key=True)
+    state: Mapped[str] = mapped_column(String(20), nullable=False)
+    claimed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+
+
 def session_factory(database_url: str) -> async_sessionmaker[AsyncSession]:
     engine = create_async_engine(database_url, pool_pre_ping=True)
     return async_sessionmaker(engine, expire_on_commit=False)

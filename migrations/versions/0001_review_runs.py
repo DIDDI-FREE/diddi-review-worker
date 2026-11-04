@@ -31,11 +31,19 @@ def upgrade() -> None:
         sa.Column("error_detail", sa.Text()),
     )
     op.create_index("ix_review_steps_run_id", "review_steps", ["run_id"])
+    op.create_table(
+        "review_event_ledger",
+        sa.Column("event_key", sa.String(length=255), primary_key=True),
+        sa.Column("state", sa.String(length=20), nullable=False),
+        sa.Column("claimed_at", sa.DateTime(timezone=True), nullable=False),
+    )
+    op.create_index("ix_review_event_ledger_state", "review_event_ledger", ["state"])
 
 
 def downgrade() -> None:
+    op.drop_index("ix_review_event_ledger_state", table_name="review_event_ledger")
+    op.drop_table("review_event_ledger")
     op.drop_index("ix_review_steps_run_id", table_name="review_steps")
     op.drop_table("review_steps")
     op.drop_index("ix_review_runs_status", table_name="review_runs")
     op.drop_table("review_runs")
-
