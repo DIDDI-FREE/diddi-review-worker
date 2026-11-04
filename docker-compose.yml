@@ -1,0 +1,18 @@
+services:
+  runner:
+    build: .
+    ports: ["8000:8000"]
+    env_file: [.env]
+    environment:
+      RUNNER_SERVICE_TOKEN: ${RUNNER_SERVICE_TOKEN:-change-me}
+    depends_on: [redis, postgres]
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: runner
+      POSTGRES_PASSWORD: runner
+      POSTGRES_DB: review_runner
+    ports: ["5432:5432"]
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
