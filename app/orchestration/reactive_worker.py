@@ -1,5 +1,6 @@
 """Polling loop glue; business actions are injected, never hard-coded here."""
 
+import asyncio
 from collections.abc import Awaitable, Callable
 from inspect import isawaitable
 from typing import Any
@@ -8,6 +9,7 @@ from app.orchestration.reactive import ObservedTrigger, ReactiveCoordinator
 from app.persistence.event_ledger import InMemoryEventLedger
 
 ReactionHandler = Callable[[ObservedTrigger], Awaitable[None]]
+Poller = Callable[[], Awaitable[list[ObservedTrigger]]]
 
 
 class ReactivePollingWorker:
@@ -41,6 +43,13 @@ class ReactivePollingWorker:
             processed += 1
         return processed
 
-    async def poll_once(self, poller: Callable[[], Awaitable[list[ObservedTrigger]]]) -> int:
+    async def poll_once(self, poller: Poller) -> int:
         """Poll one explicitly configured source; no source means no action."""
         return await self.process(await poller())
+
+    async def process_pollers(self, pollers: list[Poller]) -> int:
+        """Run the configured read-only pollers once and process their events."""
+        if not pollers:
+            return 0
+        batches = await asyncio.gather(*(poller() for poller in pollers))
+        return await self.process([event for batch in batches for event in batch])
