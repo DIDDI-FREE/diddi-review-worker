@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     jwt_algorithms: str = "RS256"
     http_timeout_seconds: float = 15.0
     review_accounts_json: str = "[]"
+    reactive_enabled: bool = False
+    reactive_poll_interval_seconds: float = 3.0
 
     @property
     def algorithms(self) -> list[str]:

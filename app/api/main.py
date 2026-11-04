@@ -1,13 +1,59 @@
+import asyncio
+import logging
+from contextlib import asynccontextmanager
+
+import httpx
+
 from fastapi import Depends, FastAPI, Header, HTTPException, status
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from app.adapters.diddigo import DiddiGoAdapter
+from app.bootstrap import build_runtime
 from app.config.settings import Settings, get_settings
 from app.observability import correlation_middleware
 from app.orchestration import Orchestrator
 from app.persistence import InMemoryRunRepository
+from app.runtime import build_production_dependencies
 from app.scenarios import RunRequest
+from app.services.go_review import GoReviewService
 
-app = FastAPI(title="diddi-review-runner", version="0.1.0")
+logger = logging.getLogger(__name__)
+
+async def _reactive_loop(settings: Settings, stop: asyncio.Event) -> None:
+    timeout = httpx.Timeout(settings.http_timeout_seconds)
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        runtime = build_runtime(settings, client)
+        production = build_production_dependencies(settings)
+        service = GoReviewService(
+            registry=runtime.registry,
+            tokens=runtime.tokens,
+            poller=runtime.go,
+            adapter=DiddiGoAdapter("diddigo", settings.diddigo_base_url, client),
+            ledger=production.events,
+        )
+        while not stop.is_set():
+            try:
+                await service.run_once()
+            except (httpx.HTTPError, ValueError, RuntimeError) as exc:
+                logger.warning("reactive Go poll failed; will retry", exc_info=exc)
+            try:
+                await asyncio.wait_for(stop.wait(), timeout=settings.reactive_poll_interval_seconds)
+            except TimeoutError:
+                pass
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    settings = get_settings()
+    stop = asyncio.Event()
+    task = asyncio.create_task(_reactive_loop(settings, stop)) if settings.reactive_enabled else None
+    yield
+    if task is not None:
+        stop.set()
+        await task
+
+
+app = FastAPI(title="diddi-review-runner", version="0.1.0", lifespan=lifespan)
 app.add_middleware(BaseHTTPMiddleware, dispatch=correlation_middleware)
 repository = InMemoryRunRepository()
 orchestrator = Orchestrator(repository)
