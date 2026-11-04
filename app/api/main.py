@@ -3,7 +3,6 @@ import logging
 from contextlib import asynccontextmanager
 
 import httpx
-
 from fastapi import Depends, FastAPI, Header, HTTPException, status
 from starlette.middleware.base import BaseHTTPMiddleware
 
