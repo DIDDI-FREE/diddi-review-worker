@@ -36,9 +36,9 @@
   - Food : une commande. Après la préparation par le reviewer, le runner joue aussi le coursier.
   Vérifié par `tests/test_professional_triggers.py` (`pytest -k tache3`) pour Go, Send et Food : seule la transition false→true crée une demande, sans duplication.
 
-- [ ] **4. Arrêts et attente**
+- [x] **4. Arrêts et attente**
   Sur annulation, refus ou fin, le runner arrête ses actions. Quand l'étape appartient au reviewer, il attend sans la faire à sa place.
-  Bloquée : l'attente du PIN Go est testée, mais le service réactif ne marque pas les annulations/refus/états terminaux et Send/Food ne sont pas raccordés.
+  Vérifié par `tests/test_terminal_guards.py` (`pytest -k tache4`) et les trois workflows : états terminaux arrêtés, données reviewer manquantes attendues.
 
 - [ ] **5. Reprise**
   Après un redémarrage, reprendre la mission en cours à l'étape enregistrée, sans recréer de demande.

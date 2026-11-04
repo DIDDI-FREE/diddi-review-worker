@@ -1,6 +1,7 @@
 from typing import Protocol
 
 from app.adapters.base import AdapterResponse
+from app.orchestration.terminal import should_stop, should_wait_for_reviewer
 
 
 class GoActions(Protocol):
@@ -15,12 +16,14 @@ class GoDriverWorkflow:
         self.adapter = adapter
 
     async def advance(self, ride_id: str, *, token: str, server_status: str, start_code: str | None, key_prefix: str) -> bool:
+        if should_stop(server_status):
+            return False
         if server_status == "REQUESTED":
             await self.adapter.accept_ride(ride_id, token=token, key=f"{key_prefix}:accept")
         elif server_status == "ACCEPTED":
             await self.adapter.arrive(ride_id, token=token, key=f"{key_prefix}:arrive")
         elif server_status == "ARRIVED":
-            if not start_code:
+            if should_wait_for_reviewer(server_status, required_value=start_code):
                 return False
             await self.adapter.start(ride_id, token=token, code=start_code, key=f"{key_prefix}:start")
         elif server_status == "IN_PROGRESS":

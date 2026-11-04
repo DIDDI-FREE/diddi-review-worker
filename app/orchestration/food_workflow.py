@@ -1,6 +1,7 @@
 from typing import Protocol
 
 from app.adapters.base import AdapterResponse
+from app.orchestration.terminal import should_stop
 
 
 class FoodActions(Protocol):
@@ -13,6 +14,8 @@ class FoodRestaurantWorkflow:
         self.adapter = adapter
 
     async def advance(self, restaurant_id: str, order_id: str, *, token: str, server_status: str, prep_minutes: int | None, key_prefix: str) -> bool:
+        if should_stop(server_status):
+            return False
         if server_status == "PENDING":
             if prep_minutes is None:
                 return False
