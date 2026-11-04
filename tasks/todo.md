@@ -5,8 +5,8 @@
 - [x] Add FastAPI lifecycle API
 - [x] Add unit tests and Docker files
 - [x] Connect production SQL repository and Redis Streams worker factory
-- [ ] Add Google Play single-session E2E driver contract
-- [ ] Resolve DiddiFood restaurant-rating contract
+- [x] Add Google Play single-session E2E driver contract
+- [~] Resolve DiddiFood restaurant-rating contract — aucune route trouvée dans le code, docs ou OpenAPI ; contrat API requis.
 - [x] Task: Define explicit reviewer/counter-role event model
   - Acceptance: Unknown accounts, repeated events and terminal events are ignored.
   - Verify: `pytest -q tests/test_reactive.py`
