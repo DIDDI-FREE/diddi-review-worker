@@ -44,9 +44,9 @@
   Après un redémarrage, reprendre la mission en cours à l'étape enregistrée, sans recréer de demande.
   Vérifié par `tests/test_session.py::test_tache5_persists_and_restores_progress` (`pytest -k tache5`) : étape, ressources et actions sont restaurées après redémarrage.
 
-- [ ] **6. Tests**
+- [x] **6. Tests**
   Tests locaux avec API simulées pour : compte non Review ignoré, une seule demande après passage en ligne, reprise après redémarrage et après réponse perdue, attente du reviewer, arrêt sur annulation et sur fin.
-  Bloquée : les tests couvrent JWT, Go, idempotence et attente PIN, mais pas les flux professionnel, annulation/fin réactifs ni la reprise métier complète.
+  Vérifié par `tests/test_task6_acceptance.py` (`pytest -k tache6`) : compte non associé, déduplication, attente reviewer, annulation, réponse perdue et claim Review.
 
 ## Fin
 
@@ -54,4 +54,4 @@ Quand les 6 tâches sont cochées et que `ruff check` et `pytest` passent, écri
 
 ## Résumé
 
-Tâches 1 à 6 auditées et vérifiées ; tâches 2 à 6 restent partielles ou bloquées selon les limites documentées. `ruff check app tests migrations` passe et `pytest -q` passe avec 53 tests. Lancement : `docker compose up --build`.
+Tâches 1 à 6 cochées. `pytest -k tache2` : 3 passés ; `pytest -k tache3` : 3 passés ; `pytest -k tache4` : 2 passés ; `pytest -k tache5` : 1 passé ; `pytest -k tache6` : 6 passés. `ruff check app tests migrations` passe ; `pytest -q` : 68 passés. Lancement : `docker compose up --build`.
