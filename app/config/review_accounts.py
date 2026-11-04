@@ -12,6 +12,7 @@ class ReviewAccountConfig(BaseModel):
     counter_user_id: str
     product: str
     enabled: bool = True
+    counter_only: bool = False
     email: str | None = None
     phone: str | None = None
     otp: str | None = None
@@ -39,7 +40,7 @@ class ReviewAccountRegistry(BaseModel):
     accounts: list[ReviewAccountConfig] = Field(default_factory=list)
 
     def bindings(self) -> list[AccountBinding]:
-        return [account.binding() for account in self.accounts if account.enabled]
+        return [account.binding() for account in self.accounts if account.enabled and not account.counter_only]
 
     @classmethod
     def from_json(cls, value: str) -> "ReviewAccountRegistry":
