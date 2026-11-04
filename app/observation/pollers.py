@@ -49,6 +49,11 @@ class SendPoller:
         payload = await self.client.get("v1/deliveries", token=context.token, params={"role": "sender", "limit": 100})
         return [ObservedTrigger(str(d.get("id")), TriggerKind.CONSUMER_RESOURCE_CREATED, "diddisend", "sender", context.user_id, str(d["id"]), str(d.get("updated_at", d.get("status")))) for d in _items(payload) if d.get("id")]
 
+    async def courier_online(self, context: PollContext) -> bool:
+        payload = await self.client.get("v1/couriers/me", token=context.token)
+        courier = payload.get("courier", payload)
+        return str(courier.get("availability_status", "")).lower() == "online"
+
 
 class FoodPoller:
     def __init__(self, client: ReadClient) -> None:

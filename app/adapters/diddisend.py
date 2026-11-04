@@ -5,6 +5,21 @@ class DiddiSendAdapter(HttpAdapter):
     async def get_delivery(self, delivery_id: str, *, token: str) -> dict:
         return await self.get(f"v1/deliveries/{delivery_id}", token=token)
 
+    async def create_delivery(self, *, token: str, sender_user_id: str, pickup: dict, dropoff: dict, key: str) -> AdapterResponse:
+        payload = {
+            "sender_user_id": sender_user_id,
+            "recipient_name": "Review Recipient",
+            "recipient_phone": "+2250700000000",
+            "pickup_location": pickup,
+            "pickup_address": pickup.get("address", ""),
+            "dropoff_location": dropoff,
+            "dropoff_address": dropoff.get("address", ""),
+            "delivery_mode": "door_to_door",
+            "payment_method": "cash",
+            "package": {"label": "Review parcel", "description": "Google Play review", "category": "documents", "declared_value": 1000},
+        }
+        return await self.post("v1/deliveries", token=token, payload=payload, idempotency_key=key)
+
     async def accept(self, delivery_id: str, *, token: str, key: str) -> AdapterResponse:
         return await self.post(f"v1/deliveries/{delivery_id}/accept", token=token, payload={}, idempotency_key=key)
 

@@ -29,6 +29,14 @@ class Settings(BaseSettings):
     diddigo_driver_otp: str = ""
     reactive_enabled: bool = False
     reactive_poll_interval_seconds: float = 3.0
+    # Default pickup/dropoff used when the runner (as the review client) creates a
+    # request after a professional goes online. Defaults sit in Abidjan.
+    request_pickup_lat: float = 5.3599
+    request_pickup_lng: float = -4.0083
+    request_pickup_address: str = "Plateau, Abidjan"
+    request_dropoff_lat: float = 5.3760
+    request_dropoff_lng: float = -3.9876
+    request_dropoff_address: str = "Cocody, Abidjan"
 
     @property
     def algorithms(self) -> list[str]:
