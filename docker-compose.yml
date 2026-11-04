@@ -16,8 +16,18 @@ services:
       DATABASE_URL: postgresql+asyncpg://runner:runner@postgres:5432/review_runner
       JWT_ALGORITHMS: RS256
       HTTP_TIMEOUT_SECONDS: 15
+      STREAM_NAME: ${STREAM_NAME:-diddi-review-runs}
       REACTIVE_ENABLED: "true"
       REACTIVE_POLL_INTERVAL_SECONDS: 3
+      # Full six-binding review roster (Go/Send/Food, both sides). Without this the
+      # app falls back to a Go-only roster built from the DIDDIGO_* vars below.
+      REVIEW_ACCOUNTS_JSON: ${REVIEW_ACCOUNTS_JSON:-[]}
+      REQUEST_PICKUP_LAT: ${REQUEST_PICKUP_LAT:-5.3599}
+      REQUEST_PICKUP_LNG: ${REQUEST_PICKUP_LNG:--4.0083}
+      REQUEST_PICKUP_ADDRESS: ${REQUEST_PICKUP_ADDRESS:-Plateau, Abidjan}
+      REQUEST_DROPOFF_LAT: ${REQUEST_DROPOFF_LAT:-5.3760}
+      REQUEST_DROPOFF_LNG: ${REQUEST_DROPOFF_LNG:--3.9876}
+      REQUEST_DROPOFF_ADDRESS: ${REQUEST_DROPOFF_ADDRESS:-Cocody, Abidjan}
       DIDDIGO_PASSENGER_USER_ID: ${DIDDIGO_PASSENGER_USER_ID:?Set passenger user id in Portainer}
       DIDDIGO_PASSENGER_EMAIL: ${DIDDIGO_PASSENGER_EMAIL:?Set passenger email in Portainer}
       DIDDIGO_PASSENGER_OTP: ${DIDDIGO_PASSENGER_OTP:?Set passenger OTP in Portainer}
