@@ -99,6 +99,7 @@ $env:PYTHONPATH='.'; pytest -q
 - [x] Pollers branchés au worker : `process_pollers` ajouté avec déduplication et test simulé.
 - [x] Workflow Go chauffeur : transitions serveur accept/arrive/start/complete avec attente du PIN testées.
 - [x] Workflow Send coursier : transitions offer/accept/pickup/deliver avec GPS, horodatage et PIN testées.
+- [x] Workflow Food restaurant : acceptation `prep_minutes` et préparation testées.
 - [ ] Démarrage worker et résolution JWT dans le runtime : à intégrer.
 - [ ] Workflows métier complets : enchaîner les actions et attendre les statuts serveur.
 - [ ] Pay et exploitation : vérifier le mode test, retries, métriques et documentation opérationnelle.
