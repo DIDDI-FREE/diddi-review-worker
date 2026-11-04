@@ -41,10 +41,11 @@ services:
       POSTGRES_USER: runner
       POSTGRES_PASSWORD: runner
       POSTGRES_DB: review_runner
-    ports: ["5432:5432"]
+    # Not published on the host: the runner reaches it in-network as "postgres".
+    # (Publishing 5432 collided with another Postgres already on the host.)
   redis:
     image: redis:7-alpine
-    ports: ["6379:6379"]
+    # Not published on the host: reached in-network as "redis".
 
 # The host's default Docker address pools (172.16.0.0/12 and 192.168.0.0/16) are
 # fully subnetted, so Docker cannot auto-allocate a new network. Pin this stack to
