@@ -29,11 +29,12 @@
   Respecter le GPS, le PIN et les preuves. Le paiement et l'avis restent au reviewer.
   Bloquée : seul le service réactif DiddiGo passager est raccordé ; les workflows Send/Food existent mais aucun service ne les déclenche sur les ressources du reviewer.
 
-- [ ] **3. Reviewer métier**
+- [~] **3. Reviewer métier**
   Quand il **passe** en ligne (vrai changement d'état, pas un état trouvé au démarrage), le runner joue le client et crée **une seule** demande compatible près de lui :
   - Go : une course.
   - Send : une livraison.
   - Food : une commande. Après la préparation par le reviewer, le runner joue aussi le coursier.
+  Bloquée : `AvailabilityTracker` existe, mais aucun poller ni service ne détecte la transition de disponibilité ou ne crée la demande métier.
 
 - [ ] **4. Arrêts et attente**
   Sur annulation, refus ou fin, le runner arrête ses actions. Quand l'étape appartient au reviewer, il attend sans la faire à sa place.
