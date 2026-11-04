@@ -1,7 +1,5 @@
 from collections.abc import Awaitable, Callable
 
-
-
 TERMINAL_CODES = {"ALREADY_RATED", "NOT_OWNER", "NOT_COMPLETED", "NOT_DELIVERED", "REVIEW_PRODUCTION_MISMATCH"}
 
 
