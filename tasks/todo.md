@@ -7,4 +7,23 @@
 - [ ] Connect production SQL repository and Redis Streams worker after external URLs/contracts are confirmed
 - [ ] Add Google Play single-session E2E driver contract
 - [ ] Resolve DiddiFood restaurant-rating contract
-
+- [x] Task: Define explicit reviewer/counter-role event model
+  - Acceptance: Unknown accounts, repeated events and terminal events are ignored.
+  - Verify: `pytest -q tests/test_reactive.py`
+  - Files: `app/orchestration/reactive.py`, `tests/test_reactive.py`
+- [ ] Task: Implement read-only product poller interfaces
+  - Acceptance: Pollers expose normalized events and never create or mutate business resources.
+  - Verify: Mocked HTTP contract tests for Go, Send and Food.
+  - Files: `app/observation/`, `tests/test_observation.py`
+- [ ] Task: Add durable event ledger and instance lease
+  - Acceptance: Restart and two workers cannot process the same trigger twice.
+  - Verify: Repository concurrency tests.
+  - Files: `app/persistence/`, `migrations/`, `tests/test_event_ledger.py`
+- [ ] Task: Wire pollers into the worker
+  - Acceptance: Worker waits when no signal exists and persists every decision.
+  - Verify: Worker tests with fake pollers and stream.
+  - Files: `app/orchestration/worker.py`, `app/api/`, `tests/`
+- [ ] Task: Implement confirmed counter-role actions
+  - Acceptance: Only public, normal business transitions are used; unsupported flows block explicitly.
+  - Verify: Adapter contract tests; no shared staging execution.
+  - Files: `app/adapters/`, `app/orchestration/`
