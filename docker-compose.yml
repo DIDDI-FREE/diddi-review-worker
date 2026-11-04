@@ -45,3 +45,12 @@ services:
   redis:
     image: redis:7-alpine
     ports: ["6379:6379"]
+
+# The host's default Docker address pools (172.16.0.0/12 and 192.168.0.0/16) are
+# fully subnetted, so Docker cannot auto-allocate a new network. Pin this stack to
+# a slice of the still-free 172.16.0.0/16 block instead.
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.16.240.0/24
