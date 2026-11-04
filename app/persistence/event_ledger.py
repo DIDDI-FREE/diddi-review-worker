@@ -1,6 +1,13 @@
 """Idempotency ledger boundary for observed review triggers."""
 
+from collections.abc import Protocol
 from threading import Lock
+
+
+class EventLedger(Protocol):
+    def claim(self, event_key: str) -> bool: ...
+
+    def mark_terminal(self, event_key: str) -> None: ...
 
 
 class InMemoryEventLedger:

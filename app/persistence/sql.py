@@ -3,6 +3,8 @@ from datetime import UTC, datetime
 from sqlalchemy import DateTime, ForeignKey, String, Text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy import update
 
 
 class Base(DeclarativeBase):
@@ -55,6 +57,30 @@ class SqlRunRepository:
             session.add(row)
 
     async def update_status(self, run_id: str, status: str) -> None:
-        from sqlalchemy import update
         async with self.sessions.begin() as session:
             await session.execute(update(ReviewRunRow).where(ReviewRunRow.id == run_id).values(status=status))
+
+
+class SqlEventLedger:
+    """PostgreSQL-backed claim ledger using the primary key as the mutex."""
+
+    def __init__(self, sessions: async_sessionmaker[AsyncSession]) -> None:
+        self.sessions = sessions
+
+    async def claim(self, event_key: str) -> bool:
+        async with self.sessions() as session:
+            try:
+                session.add(ReviewEventLedgerRow(event_key=event_key, state="claimed"))
+                await session.commit()
+                return True
+            except IntegrityError:
+                await session.rollback()
+                return False
+
+    async def mark_terminal(self, event_key: str) -> None:
+        async with self.sessions.begin() as session:
+            await session.execute(
+                update(ReviewEventLedgerRow)
+                .where(ReviewEventLedgerRow.event_key == event_key)
+                .values(state="terminal")
+            )
