@@ -2,6 +2,9 @@ from app.adapters.base import AdapterResponse, HttpAdapter
 
 
 class DiddiGoAdapter(HttpAdapter):
+    async def update_status(self, ride_id: str, *, token: str, status: str, key: str) -> AdapterResponse:
+        return await self.patch(f"v1/rides/{ride_id}/status", token=token, payload={"status": status}, idempotency_key=key)
+
     async def accept_ride(self, ride_id: str, *, token: str, key: str) -> AdapterResponse:
         return await self.post(f"v1/rides/{ride_id}/accept", token=token, payload={}, idempotency_key=key)
 

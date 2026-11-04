@@ -43,3 +43,13 @@ class HttpAdapter:
             code = body.get("code") or body.get("error", {}).get("code") or f"HTTP_{response.status_code}"
             raise AdapterError(self.service, response.status_code, str(code), response.status_code >= 500)
         return response.json() if response.content else {}
+
+    async def patch(self, path: str, *, token: str, payload: dict[str, Any], idempotency_key: str) -> AdapterResponse:
+        response = await self.client.patch(
+            f"{self.base_url}/{path.lstrip('/')}",
+            headers={"Authorization": f"Bearer {token}", "Idempotency-Key": idempotency_key},
+            json=payload,
+        )
+        if response.status_code >= 400:
+            raise AdapterError(self.service, response.status_code, f"HTTP_{response.status_code}", response.status_code >= 500)
+        return AdapterResponse(response.status_code, response.json() if response.content else {})
