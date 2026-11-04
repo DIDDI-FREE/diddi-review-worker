@@ -44,9 +44,14 @@
   Après un redémarrage, reprendre la mission en cours à l'étape enregistrée, sans recréer de demande.
   Bloquée : le ledger déduplique les déclencheurs, mais la progression métier n'est pas persistée ni reprise par le service réactif.
 
-- [ ] **6. Tests**
+- [~] **6. Tests**
   Tests locaux avec API simulées pour : compte non Review ignoré, une seule demande après passage en ligne, reprise après redémarrage et après réponse perdue, attente du reviewer, arrêt sur annulation et sur fin.
+  Bloquée : les tests couvrent JWT, Go, idempotence et attente PIN, mais pas les flux professionnel, annulation/fin réactifs ni la reprise métier complète.
 
 ## Fin
 
 Quand les 6 tâches sont cochées et que `ruff check` et `pytest` passent, écrire sous cette ligne un résumé court : tâches faites, tests passés, commande de lancement.
+
+## Résumé
+
+Tâches 1 à 6 auditées et vérifiées ; tâches 2 à 6 restent partielles ou bloquées selon les limites documentées. `ruff check app tests migrations` passe et `pytest -q` passe avec 53 tests. Lancement : `docker compose up --build`.
