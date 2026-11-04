@@ -16,7 +16,9 @@ class PollContext:
     token: str
 
 
-def _items(payload: dict[str, Any]) -> list[dict[str, Any]]:
+def _items(payload: Any) -> list[dict[str, Any]]:
+    if isinstance(payload, list):
+        return payload
     value = payload.get("items", payload.get("data", payload))
     return value if isinstance(value, list) else []
 
@@ -55,3 +57,7 @@ class FoodPoller:
     async def restaurant_orders(self, context: PollContext, restaurant_id: str) -> list[ObservedTrigger]:
         payload = await self.client.get(f"food/v1/restaurants/{restaurant_id}/orders", token=context.token)
         return [ObservedTrigger(str(o["id"]), TriggerKind.CONSUMER_RESOURCE_CREATED, "diddifood", "restaurant", context.user_id, str(o["id"]), str(o.get("updated_at", o.get("status")))) for o in _items(payload) if o.get("id")]
+
+    async def customer_orders(self, context: PollContext) -> list[ObservedTrigger]:
+        payload = await self.client.get("food/v1/orders", token=context.token)
+        return [ObservedTrigger(str(o.get("id")), TriggerKind.CONSUMER_RESOURCE_CREATED, "diddifood", "customer", context.user_id, str(o["id"]), str(o.get("updated_at", o.get("status")))) for o in _items(payload) if o.get("id")]

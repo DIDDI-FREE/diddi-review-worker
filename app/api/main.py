@@ -6,6 +6,7 @@ import httpx
 from fastapi import FastAPI, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from app.adapters.diddifood import DiddiFoodAdapter
 from app.adapters.diddigo import DiddiGoAdapter
 from app.adapters.diddisend import DiddiSendAdapter
 from app.bootstrap import build_runtime
@@ -15,6 +16,7 @@ from app.orchestration import Orchestrator
 from app.persistence import InMemoryRunRepository
 from app.runtime import build_production_dependencies
 from app.scenarios import RunRequest
+from app.services.food_review import FoodReviewService
 from app.services.go_review import GoReviewService
 from app.services.send_review import SendReviewService
 
@@ -39,6 +41,13 @@ async def _reactive_loop(settings: Settings, stop: asyncio.Event) -> None:
             adapter=DiddiSendAdapter("diddisend", settings.diddisend_base_url, client),
             ledger=production.events,
         )
+        food_service = FoodReviewService(
+            registry=runtime.registry,
+            tokens=runtime.tokens,
+            poller=runtime.food,
+            adapter=DiddiFoodAdapter("diddifood", settings.diddifood_base_url, client),
+            ledger=production.events,
+        )
         while not stop.is_set():
             try:
                 await go_service.run_once()
@@ -48,6 +57,10 @@ async def _reactive_loop(settings: Settings, stop: asyncio.Event) -> None:
                 await send_service.run_once()
             except (httpx.HTTPError, ValueError, RuntimeError) as exc:
                 logger.warning("reactive Send poll failed; will retry", exc_info=exc)
+            try:
+                await food_service.run_once()
+            except (httpx.HTTPError, ValueError, RuntimeError) as exc:
+                logger.warning("reactive Food poll failed; will retry", exc_info=exc)
             try:
                 await asyncio.wait_for(stop.wait(), timeout=settings.reactive_poll_interval_seconds)
             except TimeoutError:
