@@ -1,9 +1,9 @@
 import httpx
 import pytest
 
+from app.adapters.diddifood import DiddiFoodAdapter
 from app.adapters.diddigo import DiddiGoAdapter
 from app.adapters.diddisend import DiddiSendAdapter
-from app.adapters.diddifood import DiddiFoodAdapter
 
 
 @pytest.mark.asyncio
