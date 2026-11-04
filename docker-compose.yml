@@ -19,7 +19,12 @@ services:
       HTTP_TIMEOUT_SECONDS: 15
       REACTIVE_ENABLED: "true"
       REACTIVE_POLL_INTERVAL_SECONDS: 3
-      REVIEW_ACCOUNTS_JSON: ${REVIEW_ACCOUNTS_JSON:?Set REVIEW_ACCOUNTS_JSON in Portainer}
+      DIDDIGO_PASSENGER_USER_ID: ${DIDDIGO_PASSENGER_USER_ID:?Set passenger user id in Portainer}
+      DIDDIGO_PASSENGER_EMAIL: ${DIDDIGO_PASSENGER_EMAIL:?Set passenger email in Portainer}
+      DIDDIGO_PASSENGER_OTP: ${DIDDIGO_PASSENGER_OTP:?Set passenger OTP in Portainer}
+      DIDDIGO_DRIVER_USER_ID: ${DIDDIGO_DRIVER_USER_ID:?Set driver user id in Portainer}
+      DIDDIGO_DRIVER_EMAIL: ${DIDDIGO_DRIVER_EMAIL:?Set driver email in Portainer}
+      DIDDIGO_DRIVER_OTP: ${DIDDIGO_DRIVER_OTP:?Set driver OTP in Portainer}
     depends_on: [redis, postgres]
   postgres:
     image: postgres:16-alpine

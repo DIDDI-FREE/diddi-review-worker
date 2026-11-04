@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     jwt_algorithms: str = "RS256"
     http_timeout_seconds: float = 15.0
     review_accounts_json: str = "[]"
+    diddigo_passenger_user_id: str = ""
+    diddigo_passenger_email: str = ""
+    diddigo_passenger_otp: str = ""
+    diddigo_driver_user_id: str = ""
+    diddigo_driver_email: str = ""
+    diddigo_driver_otp: str = ""
     reactive_enabled: bool = False
     reactive_poll_interval_seconds: float = 3.0
 
