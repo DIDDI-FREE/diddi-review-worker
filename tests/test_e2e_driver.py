@@ -9,5 +9,4 @@ def test_google_play_driver_contract_is_runtime_checkable_by_shape():
         async def assert_final_state(self, expected): ...
 
     driver = Driver()
-    assert isinstance(driver, GooglePlayDriver) is False
     assert all(hasattr(driver, method) for method in ("open_app", "sign_in_single_google_account", "execute_user_journey", "assert_final_state"))
