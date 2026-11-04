@@ -104,6 +104,7 @@ $env:PYTHONPATH='.'; pytest -q
 - [~] Notation restaurant Food : aucune route/mutation trouvée dans `app/`, `docs/` ou les OpenAPI inspectés ; il faut fournir un contrat API ou retirer ce rôle.
 - [x] Fiabilité : retries bornés et erreurs métier terminales testés.
 - [~] DiddiPay : le code ne contient pas d’endpoint de confirmation non destructif du mode test ; la configuration doit fournir ce signal avant toute opération financière.
+- [x] Exploitation : lancement, Portainer, reprise, réarmement et diagnostic documentés dans `docs/OPERATIONS.md`.
 - [ ] Démarrage worker et résolution JWT dans le runtime : à intégrer.
 - [ ] Workflows métier complets : enchaîner les actions et attendre les statuts serveur.
 - [ ] Pay et exploitation : vérifier le mode test, retries, métriques et documentation opérationnelle.

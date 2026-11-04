@@ -31,3 +31,7 @@
   - Acceptance: Unconfirmed Pay mode blocks; retries have a fixed limit; terminal errors do not retry.
   - Verify: `pytest -q tests/test_pay_retry.py`
   - Files: `app/adapters/pay_gate.py`, `app/orchestration/retry.py`, `tests/test_pay_retry.py`
+- [x] Task: Document operations and diagnostics
+  - Acceptance: Launch, configuration, restart, rearm and errors are documented.
+  - Verify: Documentation review and full test suite.
+  - Files: `docs/OPERATIONS.md`
