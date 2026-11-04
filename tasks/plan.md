@@ -105,9 +105,9 @@ $env:PYTHONPATH='.'; pytest -q
 - [x] Fiabilité : retries bornés et erreurs métier terminales testés.
 - [~] DiddiPay : le code ne contient pas d’endpoint de confirmation non destructif du mode test ; la configuration doit fournir ce signal avant toute opération financière.
 - [x] Exploitation : lancement, Portainer, reprise, réarmement et diagnostic documentés dans `docs/OPERATIONS.md`.
-- [ ] Démarrage worker et résolution JWT dans le runtime : à intégrer.
-- [ ] Workflows métier complets : enchaîner les actions et attendre les statuts serveur.
-- [ ] Pay et exploitation : vérifier le mode test, retries, métriques et documentation opérationnelle.
+- [x] Démarrage worker et résolution JWT dans le runtime : `build_runtime`, `ReviewTokenCache`, pollers et factory Redis/SQL testés.
+- [~] Workflows métier complets : actions Go/Send/Food testées séparément ; une recette E2E réelle exige un driver mobile et une cible staging autorisée.
+- [~] Pay et exploitation : retries, garde Pay et documentation terminés ; confirmation externe du mode test DiddiPay absente du projet.
 
 Chaque tâche cochée a été vérifiée par `ruff` et les tests locaux ; aucune mission staging n’a été lancée.
 ## Dernière vérification

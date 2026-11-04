@@ -23,7 +23,7 @@
   - Acceptance: Worker waits when no signal exists and persists every decision.
   - Verify: Worker tests with fake pollers and stream.
   - Files: `app/orchestration/worker.py`, `app/api/`, `tests/`
-- [ ] Task: Implement confirmed counter-role actions
+- [x] Task: Implement confirmed counter-role actions
   - Acceptance: Only public, normal business transitions are used; unsupported flows block explicitly.
   - Verify: Adapter contract tests; no shared staging execution.
   - Files: `app/adapters/`, `app/orchestration/`
