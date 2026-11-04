@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     diddifreeid_jwks_url: str = "http://diddi-free-id:8000/.well-known/jwks.json"
     jwt_algorithms: str = "RS256"
     http_timeout_seconds: float = 15.0
+    review_accounts_json: str = "[]"
 
     @property
     def algorithms(self) -> list[str]:
