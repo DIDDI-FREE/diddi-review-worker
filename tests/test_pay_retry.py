@@ -1,13 +1,13 @@
 import pytest
 
-from app.adapters.pay_gate import FinancialOperationBlocked, TestModeGate
+from app.adapters.pay_gate import FinancialOperationBlocked, PayTestModeGate
 from app.orchestration.retry import bounded_retry
 
 
 def test_financial_operation_requires_confirmed_test_mode():
     with pytest.raises(FinancialOperationBlocked):
-        TestModeGate().require_test_mode()
-    TestModeGate(True).require_test_mode()
+        PayTestModeGate().require_test_mode()
+    PayTestModeGate(True).require_test_mode()
 
 
 @pytest.mark.asyncio

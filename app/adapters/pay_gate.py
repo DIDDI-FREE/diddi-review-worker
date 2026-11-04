@@ -2,7 +2,7 @@ class FinancialOperationBlocked(RuntimeError):
     pass
 
 
-class TestModeGate:
+class PayTestModeGate:
     def __init__(self, confirmed: bool = False) -> None:
         self.confirmed = confirmed
 
