@@ -95,7 +95,8 @@ $env:PYTHONPATH='.'; pytest -q
 - [x] Send consommateur : lecture de la livraison créée via `GET /v1/deliveries/{delivery_id}` testée.
 - [x] Food client : lecture de la commande créée via `GET /food/v1/orders/{order_id}` testée.
 - [x] Bootstrap bindings/clients lecture seule : `build_runtime` ajouté et testé.
-- [ ] Démarrage worker et résolution JWT : à intégrer.
+- [x] Cache JWT courts par compte : `ReviewTokenCache` ajouté sans persistance de token et testé.
+- [ ] Démarrage worker et résolution JWT dans le runtime : à intégrer.
 - [ ] Workflows métier complets : enchaîner les actions et attendre les statuts serveur.
 - [ ] Pay et exploitation : vérifier le mode test, retries, métriques et documentation opérationnelle.
 
