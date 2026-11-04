@@ -12,12 +12,15 @@ from app.adapters.diddisend import DiddiSendAdapter
 from app.bootstrap import build_runtime
 from app.config.settings import Settings, get_settings
 from app.observability import correlation_middleware
+from app.observation.clients import ReadOnlyHttpClient
+from app.observation.pollers import IdentityPoller
 from app.orchestration import Orchestrator
 from app.persistence import InMemoryRunRepository
 from app.runtime import build_production_dependencies
 from app.scenarios import RunRequest
 from app.services.food_professional import FoodProfessionalService
 from app.services.food_review import FoodReviewService
+from app.services.go_professional import GoProfessionalService
 from app.services.go_review import GoReviewService
 from app.services.send_professional import SendProfessionalService
 from app.services.send_review import SendReviewService
@@ -66,6 +69,14 @@ async def _reactive_loop(settings: Settings, stop: asyncio.Event) -> None:
             settings=settings,
             ledger=production.events,
         )
+        go_professional = GoProfessionalService(
+            registry=runtime.registry,
+            tokens=runtime.tokens,
+            poller=IdentityPoller(ReadOnlyHttpClient(settings.diddifreeid_base_url, client)),
+            adapter=DiddiGoAdapter("diddigo", settings.diddigo_base_url, client),
+            settings=settings,
+            ledger=production.events,
+        )
         while not stop.is_set():
             try:
                 await go_service.run_once()
@@ -87,6 +98,10 @@ async def _reactive_loop(settings: Settings, stop: asyncio.Event) -> None:
                 await food_professional.run_once()
             except (httpx.HTTPError, ValueError, RuntimeError) as exc:
                 logger.warning("reactive Food professional poll failed; will retry", exc_info=exc)
+            try:
+                await go_professional.run_once()
+            except (httpx.HTTPError, ValueError, RuntimeError) as exc:
+                logger.warning("reactive Go professional poll failed; will retry", exc_info=exc)
             try:
                 await asyncio.wait_for(stop.wait(), timeout=settings.reactive_poll_interval_seconds)
             except TimeoutError:

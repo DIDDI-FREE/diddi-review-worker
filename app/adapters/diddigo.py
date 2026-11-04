@@ -5,6 +5,13 @@ class DiddiGoAdapter(HttpAdapter):
     async def get_ride(self, ride_id: str, *, token: str) -> dict:
         return await self.get(f"v1/rides/{ride_id}", token=token)
 
+    async def estimate_ride(self, *, token: str, pickup: dict, dropoff: dict, key: str) -> AdapterResponse:
+        payload = {"pickup": pickup, "dropoff": dropoff, "vehicle_category": "standard", "comfort_level": "standard"}
+        return await self.post("v1/rides/pricing/estimate", token=token, payload=payload, idempotency_key=key)
+
+    async def create_ride(self, *, token: str, quote_id: str, key: str) -> AdapterResponse:
+        return await self.post("v1/rides", token=token, payload={"quote_id": quote_id, "payment_method": "cash"}, idempotency_key=key)
+
     async def update_status(self, ride_id: str, *, token: str, status: str, key: str) -> AdapterResponse:
         return await self.patch(f"v1/rides/{ride_id}/status", token=token, payload={"status": status}, idempotency_key=key)
 

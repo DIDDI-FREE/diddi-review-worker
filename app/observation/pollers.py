@@ -32,6 +32,24 @@ class GoPoller:
         return [ObservedTrigger(str(r.get("id")), TriggerKind.CONSUMER_RESOURCE_CREATED, "diddigo", role, context.user_id, str(r["id"]), str(r.get("updated_at", r.get("status")))) for r in _items(payload) if r.get("id")]
 
 
+class IdentityPoller:
+    """Reads a professional's own capability projection from DiddiFreeID.
+
+    DiddiGo does not expose a driver's live online state; it is projected into
+    DiddiFreeID as ``operational_status`` and is only readable self-scoped via
+    GET /pro/me (using the driver review account's own token).
+    """
+
+    def __init__(self, client: ReadClient) -> None:
+        self.client = client
+
+    async def driver_online(self, context: PollContext) -> bool:
+        payload = await self.client.get("pro/me", token=context.token)
+        capabilities = payload.get("capabilities", []) if isinstance(payload, dict) else []
+        statuses = {str(c.get("operational_status", "")).lower() for c in capabilities}
+        return bool(statuses & {"online", "ready"})
+
+
 class SendPoller:
     def __init__(self, client: ReadClient) -> None:
         self.client = client
