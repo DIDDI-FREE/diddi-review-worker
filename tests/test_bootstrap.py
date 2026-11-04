@@ -1,6 +1,7 @@
 import httpx
 import pytest
 
+from app.auth.jwt import ReviewClaims
 from app.bootstrap import build_runtime
 from app.config.settings import Settings
 
@@ -30,6 +31,10 @@ async def test_bootstrap_resolves_only_explicit_account(monkeypatch):
     async def issue(_, __):
         return "jwt"
     monkeypatch.setattr("app.auth.token_provider.DiddiFreeIDTokenProvider.issue_access_token", issue)
+    monkeypatch.setattr(
+        "app.adapters.diddifreeid.DiddiFreeIDAdapter.validate_actor_token",
+        lambda _, token: ReviewClaims("u1", "passenger", True),
+    )
     assert await runtime.tokens.get("u1") == "jwt"
     with pytest.raises(ValueError, match="account is not explicitly configured"):
         await runtime.tokens.get("unknown")
@@ -38,3 +43,19 @@ async def test_bootstrap_resolves_only_explicit_account(monkeypatch):
 def test_bootstrap_rejects_empty_registry():
     with pytest.raises(ValueError, match="no enabled review"):
         build_runtime(Settings(review_accounts_json="[]"), httpx.AsyncClient())
+
+
+@pytest.mark.asyncio
+async def test_bootstrap_rejects_non_review_token(monkeypatch):
+    runtime = build_runtime(settings(), httpx.AsyncClient())
+
+    async def issue(_, __):
+        return "jwt"
+
+    monkeypatch.setattr("app.auth.token_provider.DiddiFreeIDTokenProvider.issue_access_token", issue)
+    monkeypatch.setattr(
+        "app.adapters.diddifreeid.DiddiFreeIDAdapter.validate_actor_token",
+        lambda _, token: (_ for _ in ()).throw(ValueError("token is not a review account token")),
+    )
+    with pytest.raises(ValueError, match="not a review account"):
+        await runtime.tokens.get("u1")
