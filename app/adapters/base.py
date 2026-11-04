@@ -32,3 +32,14 @@ class HttpAdapter:
             raise AdapterError(self.service, response.status_code, str(code), response.status_code >= 500)
         return AdapterResponse(response.status_code, response.json() if response.content else {})
 
+    async def get(self, path: str, *, token: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+        response = await self.client.get(
+            f"{self.base_url}/{path.lstrip('/')}",
+            headers={"Authorization": f"Bearer {token}"},
+            params=params,
+        )
+        if response.status_code >= 400:
+            body = response.json() if response.content else {}
+            code = body.get("code") or body.get("error", {}).get("code") or f"HTTP_{response.status_code}"
+            raise AdapterError(self.service, response.status_code, str(code), response.status_code >= 500)
+        return response.json() if response.content else {}
